@@ -21,16 +21,16 @@
  * specific language governing permissions and limitations
  * under the License.
 */
-
+#define MAX_PLANETS 20
 cbuffer u_input : register(b0, UPDATE_FREQ_PER_FRAME)
 {
     float4 resolution;
     float4x4 invView;
 
     float4x4 ProjectView;
-    float4x4 ToWorldMat;
-    float4x4 ToWorldMatInv;
-    float4 Color;
+    float4x4 ToWorldMat[MAX_PLANETS];
+    float4x4 ToWorldMatInv[MAX_PLANETS];
+    float4 Color[MAX_PLANETS];
 
     float3 LightPos;
     float3 LightColor;
@@ -215,7 +215,7 @@ float2 map( in float3 pos )
 {
     float2 res = opU( float2( sdPlane(     pos), 1.0 ),
                     float2( sdSphere(    pos-float3( 0.0,0.25, 0.0), 0.25 ), 46.9 ) );
-    res = opU( res, float2( sdBox(       mul(ToWorldMatInv, float4(pos, 1.0)).xyz, 0.25 ), 3.0 ) );
+    res = opU( res, float2( sdBox(       mul(ToWorldMatInv[1], float4(pos, 1.0)).xyz, 0.25 ), 3.0 ) );
     res = opU( res, float2( udRoundBox(  pos-float3( 1.0,0.25, 1.0), 0.15, 0.1 ), 41.0 ) );
     res = opU( res, float2( sdTorus(     pos-float3( 0.0,0.25, 1.0), float2(0.20,0.05) ), 25.0 ) );
     res = opU( res, float2( sdCapsule(   pos,float3(-1.3,0.10,-0.1), float3(-0.8,0.50,0.2), 0.1  ), 31.9 ) );
